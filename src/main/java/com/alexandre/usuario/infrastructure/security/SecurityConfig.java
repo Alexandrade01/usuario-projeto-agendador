@@ -1,7 +1,5 @@
-package com.alexandre.usuario.security;
+package com.alexandre.usuario.infrastructure.security;
 
-import com.alexandre.usuario.security.JwtRequestFilter;
-import com.alexandre.usuario.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -59,7 +57,7 @@ public class SecurityConfig {
 
     // Configura o PasswordEncoder para criptografar senhas usando BCrypt
     @Bean
-    public Passw    ordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(); // Retorna uma instância de BCryptPasswordEncoder
     }
 

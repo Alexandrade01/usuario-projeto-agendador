@@ -1,4 +1,4 @@
-package com.alexandre.usuario.security;
+package com.alexandre.usuario.infrastructure.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -16,11 +16,11 @@ import java.io.IOException;
 public class JwtRequestFilter extends OncePerRequestFilter {
 
     // Define propriedades para armazenar instâncias de JwtUtil e UserDetailsService
-    private final com.estudos.projetoestudos.infrastructure.security.JwtUtil jwtUtil;
     private final UserDetailsService userDetailsService;
+    private final JwtUtil jwtUtil;
 
     // Construtor que inicializa as propriedades com instâncias fornecidas
-    public JwtRequestFilter(com.estudos.projetoestudos.infrastructure.security.JwtUtil jwtUtil, UserDetailsService userDetailsService) {
+    public JwtRequestFilter(JwtUtil jwtUtil, UserDetailsService userDetailsService) {
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
     }
@@ -47,6 +47,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             // Extrai o token JWT do cabeçalho
             final String token = authorizationHeader.substring(7);
             // Extrai o nome de usuário do token JWT
+
             final String username = jwtUtil.extractUsername(token);
 
             // Se o nome de usuário não for nulo e o usuário não estiver autenticado ainda

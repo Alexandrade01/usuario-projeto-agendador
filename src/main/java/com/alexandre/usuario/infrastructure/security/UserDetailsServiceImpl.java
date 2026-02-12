@@ -1,14 +1,14 @@
-package com.alexandre.usuario.security;
+package com.alexandre.usuario.infrastructure.security;
 
+
+import com.alexandre.usuario.infrastructure.entity.Usuario;
+import com.alexandre.usuario.infrastructure.exception.ConflictException;
+import com.alexandre.usuario.infrastructure.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import com.estudos.projetoestudos.entity.Usuario;
-import com.estudos.projetoestudos.exception.ConflictException;
-import com.estudos.projetoestudos.repository.UsuarioRepository;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -23,7 +23,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // Busca o usuário no banco de dados pelo e-mail
         Usuario usuario;
 
-			usuario = usuarioRepository.findByEmail(email).orElseThrow(() -> new ConflictException("Usuario não encontrato: "+email));
+			usuario = usuarioRepository.findByEmail(email).orElseThrow(() -> new ConflictException("Usuario não encontrado: "+email));
 
 
         // Cria e retorna um objeto UserDetails com base no usuário encontrado
