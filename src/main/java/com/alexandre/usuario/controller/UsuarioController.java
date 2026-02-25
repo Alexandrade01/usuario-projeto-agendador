@@ -23,7 +23,7 @@ public class UsuarioController {
     @PostMapping
     public ResponseEntity<UsuarioDTO> postUsuario(@RequestBody UsuarioDTO usuarioDTO){
 
-        return  ResponseEntity.ok(usuarioService.salvaUsua"rioDTO(usuarioDTO));
+        return  ResponseEntity.ok(usuarioService.salvaUsuarioDTO(usuarioDTO));
 
     }
 
