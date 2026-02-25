@@ -27,6 +27,10 @@ public class UsuarioConverter {
 
     public List<Endereco> paraListaEndereco(List<EnderecoDTO> enderecoDTOS) {
 
+        if(enderecoDTOS == null){
+            return List.of();
+        }
+
         //alternativa para for e foreach
         return enderecoDTOS.stream().map(this::getEndereco).toList();
     }
@@ -46,6 +50,10 @@ public class UsuarioConverter {
     }
 
     public List<Telefone> paraListaTelefones(List<TelefoneDTO> telefoneDTOS) {
+
+        if (telefoneDTOS == null) {
+            return List.of();
+        }
 
         return telefoneDTOS.stream().map(this::paraTelefone).toList();
 
