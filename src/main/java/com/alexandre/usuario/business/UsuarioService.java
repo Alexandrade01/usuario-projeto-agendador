@@ -4,6 +4,7 @@ import com.alexandre.usuario.business.converter.UsuarioConverter;
 import com.alexandre.usuario.business.dto.UsuarioDTO;
 import com.alexandre.usuario.infrastructure.entity.Usuario;
 import com.alexandre.usuario.infrastructure.exception.ConflictException;
+import com.alexandre.usuario.infrastructure.exception.ResourceNotFoundException;
 import com.alexandre.usuario.infrastructure.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,7 +24,7 @@ public class UsuarioService {
 
         usuarioDTO.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
 
-        //Objeto Usuario -> entity
+        //Objeto Usuario -> entity encapsulamento para a tabela no postgree
         //Objeto UsuarioDTO -> usuario local para uso encapsulado
         Usuario user = usuarioConverter.paraUsuario(usuarioDTO);
 
@@ -51,5 +52,18 @@ public class UsuarioService {
             throw new ConflictException("Email de usuario já cadastrado: " + email, e.getCause());
         }
 
+    }
+
+    public Usuario buscaUsuarioPorEmail(String email) {
+
+        return repository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Email não encontrado " + email));
+    }
+
+    /**
+     * @param email
+     */
+    public void deleteByEmail(String email) {
+
+        repository.deleteByEmail(email);
     }
 }
