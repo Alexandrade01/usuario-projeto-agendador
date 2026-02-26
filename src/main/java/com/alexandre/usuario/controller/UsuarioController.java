@@ -11,6 +11,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/usuario")
 @RequiredArgsConstructor
@@ -54,6 +56,20 @@ public class UsuarioController {
 
         return ResponseEntity.ok().body("Usuario com email " + email + " deletado !");
 
+    }
+
+    @PutMapping
+    public ResponseEntity<UsuarioDTO> atualizaDadosUsuario(@RequestBody UsuarioDTO dto,
+                                                           @RequestHeader("Authorization") String token){
+
+        return ResponseEntity.ok(usuarioService.atualizaDadosUsuario(token,dto));
+
+    }
+
+    @GetMapping("findAll")
+    public ResponseEntity<List<UsuarioDTO>> findAllUsuario(){
+
+        return ResponseEntity.ok(usuarioService.findAllUsuarios());
     }
 
 }
