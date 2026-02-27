@@ -32,10 +32,10 @@ public class UsuarioConverter {
         }
 
         //alternativa para for e foreach
-        return enderecoDTOS.stream().map(this::paraEndereco).toList();
+        return enderecoDTOS.stream().map(this::paraEnderecoEntity).toList();
     }
 
-    public Endereco paraEndereco(EnderecoDTO enderecoDTO) {
+    public Endereco paraEnderecoEntity(EnderecoDTO enderecoDTO) {
 
         return Endereco.builder()
                 .rua(enderecoDTO.getRua())
@@ -49,21 +49,45 @@ public class UsuarioConverter {
 
     }
 
+    public Endereco paraEnderecoEntity(EnderecoDTO enderecoDTO, Long idUsuario) {
+
+        return Endereco.builder()
+                .rua(enderecoDTO.getRua())
+                .numero(enderecoDTO.getNumero())
+                .cidade(enderecoDTO.getCidade())
+                .cidade(enderecoDTO.getCidade())
+                .complemento(enderecoDTO.getComplemento())
+                .cep(enderecoDTO.getCep())
+                .estado(enderecoDTO.getEstado())
+                .usuario_id(idUsuario)
+                .build();
+
+    }
+
     public List<Telefone> paraListaTelefones(List<TelefoneDTO> telefoneDTOS) {
 
         if (telefoneDTOS == null) {
             return List.of();
         }
 
-        return telefoneDTOS.stream().map(this::paraTelefone).toList();
+        return telefoneDTOS.stream().map(this::paraTelefoneEntity).toList();
 
     }
 
-    public Telefone paraTelefone(TelefoneDTO telefoneDTO) {
+    public Telefone paraTelefoneEntity(TelefoneDTO telefoneDTO) {
 
         return Telefone.builder()
                 .numero(telefoneDTO.getNumero())
                 .ddd(telefoneDTO.getDdd())
+                .build();
+    }
+
+    public Telefone paraTelefoneEntity(TelefoneDTO telefoneDTO, Long idUsuario) {
+
+        return Telefone.builder()
+                .numero(telefoneDTO.getNumero())
+                .ddd(telefoneDTO.getDdd())
+                .usuario_id(idUsuario)
                 .build();
     }
 
@@ -82,10 +106,10 @@ public class UsuarioConverter {
     public List<EnderecoDTO> paraListaEnderecoDTO(List<Endereco> endereco) {
 
         //alternativa para for e foreach
-        return endereco.stream().map(this::paraEnderecosDTO).toList();
+        return endereco.stream().map(this::paraEnderecoDTO).toList();
     }
 
-    public EnderecoDTO paraEnderecosDTO(Endereco endereco) {
+    public EnderecoDTO paraEnderecoDTO(Endereco endereco) {
 
         return EnderecoDTO.builder()
                 .id(endereco.getId())
