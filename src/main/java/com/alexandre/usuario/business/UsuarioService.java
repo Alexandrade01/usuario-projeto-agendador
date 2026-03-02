@@ -94,7 +94,6 @@ public class UsuarioService {
         //Buscamos o email do usuario atraves do token
         String email = jwtUtil.extractTokenEmail(token.substring(7));
 
-        usuarioDTO.setSenha(usuarioDTO.getSenha() != null ? passwordEncoder.encode(usuarioDTO.getSenha()) : null );
         //busca os dados do usuario
         Usuario usuarioEntity = usuarioRepository.findByEmail(email).orElseThrow(()
                 -> new ResourceNotFoundException("Email não localizado !"));
@@ -102,8 +101,10 @@ public class UsuarioService {
         //Faz a mesclagem dos dados da tabela e dos dados novos
         Usuario usuario = usuarioConverter.updateUsuario(usuarioDTO,usuarioEntity);
 
-        //encriptar novamente a senha
-        usuario.setSenha(passwordEncoder.encode(usuario.getPassword()));
+        // Criptografar a senha APENAS UMA VEZ, se ela foi alterada
+        if(usuarioDTO.getSenha() != null) {
+            usuario.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
+        }
 
         //Salva os novos dados na tabela (USUARIO) e envia os novos dados no modo DTO para o controller (USUARIODTO)
         return usuarioConverter.paraUsuarioDTO(usuarioRepository.save(usuario));
