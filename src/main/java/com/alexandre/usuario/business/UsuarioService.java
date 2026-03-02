@@ -134,6 +134,7 @@ public class UsuarioService {
                 " não encontrado " + idEndereco));
 
         Endereco endereco = usuarioConverter.updateEndereco(enderecoDTO,entity);
+        endereco.setId(idEndereco);
 
         return usuarioConverter.paraEnderecoDTO(enderecoRepository.save(endereco));
 
@@ -146,6 +147,7 @@ public class UsuarioService {
                 " não encontrado " + idTelefone));
 
         Telefone telefone = usuarioConverter.updateTelefone(telefoneDTO,entity);
+        telefone.setId(idTelefone);
 
         return usuarioConverter.paraTelefoneDTO(telefoneRepository.save(telefone));
     }
