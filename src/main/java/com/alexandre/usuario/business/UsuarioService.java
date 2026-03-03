@@ -176,4 +176,15 @@ public class UsuarioService {
 
         return usuarioConverter.paraTelefoneDTO(telefoneRepository.save(telefone));
     }
+
+    public void deleteByEndereco(Long enderecoId) {
+
+        enderecoRepository.deleteById(enderecoId);
+
+    }
+
+    public void deleteByTelefone(Long telefoneId) {
+
+        telefoneRepository.deleteById(telefoneId);
+    }
 }
