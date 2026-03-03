@@ -94,7 +94,6 @@ public class UsuarioService {
         //Buscamos o email do usuario atraves do token
         String email = jwtUtil.extractTokenEmail(token.substring(7));
 
-        usuarioDTO.setSenha(usuarioDTO.getSenha() != null ? passwordEncoder.encode(usuarioDTO.getSenha()) : null );
         //busca os dados do usuario
         Usuario usuarioEntity = usuarioRepository.findByEmail(email).orElseThrow(()
                 -> new ResourceNotFoundException("Email não localizado !"));
@@ -102,8 +101,10 @@ public class UsuarioService {
         //Faz a mesclagem dos dados da tabela e dos dados novos
         Usuario usuario = usuarioConverter.updateUsuario(usuarioDTO,usuarioEntity);
 
-        //encriptar novamente a senha
-        usuario.setSenha(passwordEncoder.encode(usuario.getPassword()));
+        // Criptografar a senha APENAS UMA VEZ, se ela foi alterada
+        if(usuarioDTO.getSenha() != null) {
+            usuario.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
+        }
 
         //Salva os novos dados na tabela (USUARIO) e envia os novos dados no modo DTO para o controller (USUARIODTO)
         return usuarioConverter.paraUsuarioDTO(usuarioRepository.save(usuario));
@@ -133,6 +134,7 @@ public class UsuarioService {
                 " não encontrado " + idEndereco));
 
         Endereco endereco = usuarioConverter.updateEndereco(enderecoDTO,entity);
+        endereco.setId(idEndereco);
 
         return usuarioConverter.paraEnderecoDTO(enderecoRepository.save(endereco));
 
@@ -145,6 +147,7 @@ public class UsuarioService {
                 " não encontrado " + idTelefone));
 
         Telefone telefone = usuarioConverter.updateTelefone(telefoneDTO,entity);
+        telefone.setId(idTelefone);
 
         return usuarioConverter.paraTelefoneDTO(telefoneRepository.save(telefone));
     }
@@ -172,5 +175,16 @@ public class UsuarioService {
         Telefone telefone = usuarioConverter.paraTelefoneEntity(dto,usuario.getId());
 
         return usuarioConverter.paraTelefoneDTO(telefoneRepository.save(telefone));
+    }
+
+    public void deleteByEndereco(Long enderecoId) {
+
+        enderecoRepository.deleteById(enderecoId);
+
+    }
+
+    public void deleteByTelefone(Long telefoneId) {
+
+        telefoneRepository.deleteById(telefoneId);
     }
 }
