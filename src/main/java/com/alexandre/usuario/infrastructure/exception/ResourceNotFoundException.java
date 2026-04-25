@@ -1,19 +1,12 @@
 package com.alexandre.usuario.infrastructure.exception;
 
-public class ResourceNotFoundException extends RuntimeException {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+public class ResourceNotFoundException extends RuntimeException{
 
-	public ResourceNotFoundException(String message) {
-		super(message);
-	}
-	
-	public ResourceNotFoundException(String message, Throwable e) {
-		super(message,e);
+	public ResourceNotFoundException(String mensagem){
+		super(mensagem);
 	}
 
-
+	public ResourceNotFoundException(String mensagem, Throwable throwable){
+		super(mensagem, throwable);
+	}
 }
