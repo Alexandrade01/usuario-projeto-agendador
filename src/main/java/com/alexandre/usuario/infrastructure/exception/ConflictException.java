@@ -2,25 +2,12 @@ package com.alexandre.usuario.infrastructure.exception;
 
 public class ConflictException extends RuntimeException{
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	public ConflictException(String mensagem){
+		super(mensagem);
+	}
 
-	public ConflictException(String message){
-
-        super(message);
-
-    }
-
-    public ConflictException(String message,String string){
-
-        super(message);
-    }
-
-	public ConflictException(String string, Throwable cause) {
-		
-		super(string,cause);
+	public ConflictException(String mensagem, Throwable throwable){
+		super(mensagem);
 	}
 
 }
