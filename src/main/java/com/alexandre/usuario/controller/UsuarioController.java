@@ -37,7 +37,7 @@ public class UsuarioController {
     }
 
     /**     * Realiza a autenticação do usuário e retorna um token JWT.     *     * @param usuarioDTO objeto contendo email e senha do usuário     * @return ResponseEntity contendo o token JWT prefixado com "Bearer" com status 200 OK     */
-    @PostMapping("login")
+    @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody UsuarioDTO usuarioDTO) {
 
         return ResponseEntity.ok(usuarioService.autenticarUsuario(usuarioDTO));
@@ -45,7 +45,7 @@ public class UsuarioController {
     }
 
     /**     * Busca um usuário pelo endereço de email.     *     * @param email endereço de email do usuário a ser buscado (query parameter)     * @return ResponseEntity contendo o DTO do usuário encontrado com status 200 OK     */
-    @GetMapping("getByEmail")
+    @GetMapping("/getByEmail")
     public ResponseEntity<UsuarioDTO> getUsuarioPorEmail(@RequestParam String email) {
 
         return ResponseEntity.ok(usuarioService.buscaUsuarioPorEmail(email));
@@ -53,7 +53,7 @@ public class UsuarioController {
     }
 
     /**     * Remove um usuário do sistema pelo endereço de email.     *     * @param email endereço de email do usuário a ser deletado (path variable)     * @return ResponseEntity contendo mensagem de confirmação com status 200 OK     */
-    @DeleteMapping("deleteByEmail/{email}")
+    @DeleteMapping("/deleteByEmail/{email}")
     public ResponseEntity<String> deleteusuarioPorEmail(@PathVariable String email) {
 
         usuarioService.deleteByEmail(email);
@@ -106,14 +106,14 @@ public class UsuarioController {
     }
 
     /**     * Lista todos os usuários cadastrados no sistema.     * <p>     * Requer autenticação via token JWT.     * </p>     *     * @param token token JWT de autenticação (header Authorization)     * @return ResponseEntity contendo lista de DTOs de todos os usuários com status 200 OK     */
-    @GetMapping("findAll")
+    @GetMapping("/findAll")
     public ResponseEntity<List<UsuarioDTO>> findAllUsuario(@RequestHeader("Authorization") String token) {
 
         return ResponseEntity.ok(usuarioService.findAllUsuarios(token));
     }
 
     /**     * Remove um endereço específico do usuário autenticado.     *     * @param enderecoId identificador do endereço a ser deletado (path variable)     * @param token token JWT de autenticação (header Authorization)     * @return ResponseEntity contendo mensagem de confirmação com status 200 OK     */
-    @DeleteMapping("deleteByEndereco/{enderecoId}")
+    @DeleteMapping("/deleteByEndereco/{enderecoId}")
     public ResponseEntity<String> exclusaoDeEndereco(@PathVariable Long enderecoId, @RequestHeader("Authorization") String token) {
 
 
@@ -123,7 +123,7 @@ public class UsuarioController {
     }
 
     /**     * Remove um telefone específico do usuário autenticado.     *     * @param telefoneId identificador do telefone a ser deletado (path variable)     * @param token token JWT de autenticação (header Authorization)     * @return ResponseEntity contendo mensagem de confirmação com status 200 OK     */
-    @DeleteMapping("deleteByTelefone/{telefoneId}")
+    @DeleteMapping("/deleteByTelefone/{telefoneId}")
     public ResponseEntity<String> exclusaoDeTelefone(@PathVariable Long telefoneId, @RequestHeader("Authorization") String token) {
 
 
