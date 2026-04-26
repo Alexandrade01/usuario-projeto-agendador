@@ -6,7 +6,7 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
-import java.util.Base64;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Service
@@ -16,8 +16,7 @@ public class JwtUtil {
     private final String secretKey = "sua-chave-secreta-super-segura-que-deve-ser-bem-longa";
 
     private SecretKey getSecretKey(){
-        byte[] key = Base64.getDecoder().decode(secretKey);
-        return Keys.hmacShaKeyFor(key);
+        return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
     // Gera um token JWT com o nome de usuário e validade de 1 hora

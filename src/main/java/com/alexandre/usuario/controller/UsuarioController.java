@@ -74,8 +74,7 @@ public class UsuarioController {
     /**     * Atualiza os dados de um endereço específico.     *     * @param enderecoDTO objeto contendo os novos dados do endereço     * @param id identificador do endereço a ser atualizado (query parameter)     * @param token token JWT de autenticação (header Authorization)     * @return ResponseEntity contendo o DTO do endereço atualizado com status 200 OK     */
     @PutMapping("/endereco")
     public ResponseEntity<EnderecoDTO> atualizaEndereco(@RequestBody EnderecoDTO enderecoDTO,
-                                                        @RequestParam("id") Long id,
-                                                        @RequestHeader("Authorization") String token) {
+                                                        @RequestParam("id") Long id) {
 
         return ResponseEntity.ok(usuarioService.atualizaEndereco(id, enderecoDTO));
 
@@ -84,8 +83,7 @@ public class UsuarioController {
     /**     * Atualiza os dados de um telefone específico.     *     * @param telefoneDto objeto contendo os novos dados do telefone     * @param id identificador do telefone a ser atualizado (query parameter)     * @param token token JWT de autenticação (header Authorization)     * @return ResponseEntity contendo o DTO do telefone atualizado com status 200 OK     */
     @PutMapping("/telefone")
     public ResponseEntity<TelefoneDTO> atualizaTelefone(@RequestBody TelefoneDTO telefoneDto,
-                                                        @RequestParam("id") Long id,
-                                                        @RequestHeader("Authorization") String token) {
+                                                        @RequestParam("id") Long id) {
 
         return ResponseEntity.ok(usuarioService.atualizaTelefone(id, telefoneDto));
 

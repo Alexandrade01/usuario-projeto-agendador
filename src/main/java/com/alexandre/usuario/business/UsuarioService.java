@@ -114,7 +114,7 @@ public class UsuarioService {
     public UsuarioDTO atualizaDadosUsuario(String token, UsuarioDTO usuarioDTO) {
 
         //Buscamos o email do usuario atraves do token
-        String email = jwtUtil.extractTokenEmail(token.substring(7));
+        String email = jwtUtil.extrairEmailToken(token.substring(7));
 
         //busca os dados do usuario
         Usuario usuarioEntity = usuarioRepository.findByEmail(email).orElseThrow(()
@@ -158,7 +158,7 @@ public class UsuarioService {
 
     public EnderecoDTO cadastroDeEndereco(String token, EnderecoDTO dto) {
 
-        String email = jwtUtil.extractTokenEmail(token.substring(7));
+        String email = jwtUtil.extrairEmailToken(token.substring(7));
 
         Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow(() ->
                 new ResourceNotFoundException("Email não encontrado: " + email));
@@ -171,7 +171,7 @@ public class UsuarioService {
 
     public TelefoneDTO cadastroDeTelefone(String token, TelefoneDTO dto) {
 
-        String email = jwtUtil.extractTokenEmail(token.substring(7));
+        String email = jwtUtil.extrairEmailToken(token.substring(7));
 
         Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow(() ->
                 new ResourceNotFoundException("Email não encontrado: " + email));
@@ -183,7 +183,7 @@ public class UsuarioService {
 
     public void deleteByEndereco(String token, Long enderecoId) {
 
-        String email = jwtUtil.extractTokenEmail(token.substring(7));
+        String email = jwtUtil.extrairEmailToken(token.substring(7));
 
         Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow(() ->
                 new ResourceNotFoundException("Email não encontrado: " + email));
@@ -194,7 +194,7 @@ public class UsuarioService {
 
     public void deleteByTelefone(String token, Long telefoneId) {
 
-        String email = jwtUtil.extractTokenEmail(token.substring(7));
+        String email = jwtUtil.extrairEmailToken(token.substring(7));
 
         Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow(() ->
                 new ResourceNotFoundException("Email não encontrado: " + email));
@@ -206,7 +206,7 @@ public class UsuarioService {
 
         List<Usuario> usuarioList = usuarioRepository.findAll();
 
-        String email = jwtUtil.extractTokenEmail(token.substring(7));
+        String email = jwtUtil.extrairEmailToken(token.substring(7));
 
         if (email.equals("admin@admin.com")) {
 
