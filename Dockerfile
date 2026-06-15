@@ -1,9 +1,13 @@
-FROM amazoncorretto:17-alpine AS build
+FROM gradle:jdk17-corretto AS build
+WORKDIR /app
+COPY . .
+RUN gradle build --no-daemon
+
+FROM amazoncorretto:17-alpine
 
 WORKDIR /app
 
-COPY build/libs/usuario-0.0.1-SNAPSHOT.jar /app/usuario.jar
+COPY --from=build /app/build/libs/*SNAPSHOT.jar /app/app.jar
+EXPOSE 8083
 
-EXPOSE 8080
-
-CMD ["java", "-jar", "/app/usuario.jar"]
+CMD ["java", "-jar", "app.jar"]
