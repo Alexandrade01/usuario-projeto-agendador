@@ -5,8 +5,14 @@ import com.alexandre.usuario.business.UsuarioService;
 import com.alexandre.usuario.business.dto.EnderecoDTO;
 import com.alexandre.usuario.business.dto.TelefoneDTO;
 import com.alexandre.usuario.business.dto.UsuarioDTO;
+import com.alexandre.usuario.infrastructure.exception.dto.ErrorResponseDTO;
 import com.alexandre.usuario.infrastructure.security.JwtUtil;
-import com.alexandre.usuario.infrastructure.security.SecurityConfig;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +22,22 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/** * Controller REST responsável pelo gerenciamento de usuários e seus dados relacionados. * <p> * Fornece endpoints para operações CRUD de usuários, endereços e telefones, * além de autenticação via JWT. * </p> * * @author Alexandre * @version 1.0 * @since 2026-04-25 */
+/**
+ * Controller REST responsável pelo gerenciamento de usuários e seus dados relacionados.
+ * <p>
+ * Fornece endpoints para operações CRUD de usuários, endereços e telefones,
+ * além de autenticação via JWT.
+ * </p>
+ *
+ * @author Alexandre
+ * @version 1.0
+ * @since 2026-04-25
+ */
 @RestController
 @RequestMapping("/usuario")
 @RequiredArgsConstructor
-@Tag(name = "Tarefas", description = "Cadastra tarefas de usuários")
-@SecurityRequirement(name = SecurityConfig.SECURITY_SCHEME)
+@Tag(name = "Usuários", description = "API para gerenciamento completo de usuários, endereços e telefones")
+@SecurityRequirement(name = "bearer-jwt")
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
@@ -44,9 +60,47 @@ public class UsuarioController {
 
     }
 
-    /**     * Busca um usuário pelo endereço de email.     *     * @param email endereço de email do usuário a ser buscado (query parameter)     * @return ResponseEntity contendo o DTO do usuário encontrado com status 200 OK     */
+    /**
+     * Busca um usuário pelo endereço de email.
+     *
+     * @param email endereço de email do usuário a ser buscado (query parameter)
+     * @return ResponseEntity contendo o DTO do usuário encontrado com status 200 OK
+     */
+    @Operation(
+            summary = "Buscar usuário por email",
+            description = "Retorna os dados completos de um usuário específico através do seu email. Requer autenticação.",
+            tags = {"Usuários"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Usuário encontrado com sucesso",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = UsuarioDTO.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Usuário não encontrado",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDTO.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Não autorizado - Token inválido ou expirado",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDTO.class)
+                    )
+            )
+    })
     @GetMapping("/getByEmail")
-    public ResponseEntity<UsuarioDTO> getUsuarioPorEmail(@RequestParam String email) {
+    public ResponseEntity<UsuarioDTO> getUsuarioPorEmail(
+            @Parameter(description = "Email do usuário a ser buscado", required = true, example = "joao.silva@email.com")
+            @RequestParam String email) {
 
         return ResponseEntity.ok(usuarioService.buscaUsuarioPorEmail(email));
 
@@ -71,10 +125,50 @@ public class UsuarioController {
 
     }
 
-    /**     * Atualiza os dados de um endereço específico.     *     * @param enderecoDTO objeto contendo os novos dados do endereço     * @param id identificador do endereço a ser atualizado (query parameter)     * @param token token JWT de autenticação (header Authorization)     * @return ResponseEntity contendo o DTO do endereço atualizado com status 200 OK     */
+    /**
+     * Atualiza os dados de um endereço específico.
+     *
+     * @param enderecoDTO objeto contendo os novos dados do endereço
+     * @param id identificador do endereço a ser atualizado (query parameter)
+     * @return ResponseEntity contendo o DTO do endereço atualizado com status 200 OK
+     */
+    @Operation(
+            summary = "Atualizar endereço",
+            description = "Atualiza os dados de um endereço específico do usuário autenticado. Requer autenticação.",
+            tags = {"Endereços"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Endereço atualizado com sucesso",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = EnderecoDTO.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Endereço não encontrado",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDTO.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Não autorizado - Token inválido ou expirado",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDTO.class)
+                    )
+            )
+    })
     @PutMapping("/endereco")
-    public ResponseEntity<EnderecoDTO> atualizaEndereco(@RequestBody EnderecoDTO enderecoDTO,
-                                                        @RequestParam("id") Long id) {
+    public ResponseEntity<EnderecoDTO> atualizaEndereco(
+            @Parameter(description = "Novos dados do endereço", required = true)
+            @RequestBody EnderecoDTO enderecoDTO,
+            @Parameter(description = "ID do endereço a ser atualizado", required = true, example = "1")
+            @RequestParam("id") Long id) {
 
         return ResponseEntity.ok(usuarioService.atualizaEndereco(id, enderecoDTO));
 
@@ -96,10 +190,58 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioService.cadastroDeEndereco(token, dto));
     }
 
-    /**     * Cadastra um novo telefone para o usuário autenticado.     *     * @param dto objeto contendo os dados do telefone a ser cadastrado     * @param token token JWT de autenticação (header Authorization)     * @return ResponseEntity contendo o DTO do telefone cadastrado com status 200 OK     */
+    /**
+     * Cadastra um novo telefone para o usuário autenticado.
+     *
+     * @param dto objeto contendo os dados do telefone a ser cadastrado
+     * @param token token JWT de autenticação (header Authorization)
+     * @return ResponseEntity contendo o DTO do telefone cadastrado com status 200 OK
+     */
+    @Operation(
+            summary = "Cadastrar novo telefone",
+            description = "Adiciona um novo telefone ao usuário autenticado. O usuário é identificado através do token JWT.",
+            tags = {"Telefones"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Telefone cadastrado com sucesso",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = TelefoneDTO.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Usuário não encontrado",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDTO.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Não autorizado - Token inválido ou expirado",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDTO.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Dados do telefone inválidos",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDTO.class)
+                    )
+            )
+    })
     @PostMapping("/telefone")
-    public ResponseEntity<TelefoneDTO> cadastraTelefone(@RequestBody TelefoneDTO dto,
-                                                        @RequestHeader("Authorization") String token) {
+    public ResponseEntity<TelefoneDTO> cadastraTelefone(
+            @Parameter(description = "Dados do telefone a ser cadastrado", required = true)
+            @RequestBody TelefoneDTO dto,
+            @Parameter(description = "Token JWT no formato: Bearer {token}", required = true)
+            @RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(usuarioService.cadastroDeTelefone(token, dto));
     }
 
@@ -120,9 +262,50 @@ public class UsuarioController {
         return ResponseEntity.ok().body("Endereço deletado !");
     }
 
-    /**     * Remove um telefone específico do usuário autenticado.     *     * @param telefoneId identificador do telefone a ser deletado (path variable)     * @param token token JWT de autenticação (header Authorization)     * @return ResponseEntity contendo mensagem de confirmação com status 200 OK     */
+    /**
+     * Remove um telefone específico do usuário autenticado.
+     *
+     * @param telefoneId identificador do telefone a ser deletado (path variable)
+     * @param token token JWT de autenticação (header Authorization)
+     * @return ResponseEntity contendo mensagem de confirmação com status 200 OK
+     */
+    @Operation(
+            summary = "Deletar telefone",
+            description = "Remove permanentemente um telefone específico do usuário autenticado. Requer autenticação.",
+            tags = {"Telefones"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Telefone deletado com sucesso",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = String.class, example = "Telefone deletado !")
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Telefone não encontrado",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDTO.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Não autorizado - Token inválido ou expirado",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDTO.class)
+                    )
+            )
+    })
     @DeleteMapping("/deleteByTelefone/{telefoneId}")
-    public ResponseEntity<String> exclusaoDeTelefone(@PathVariable Long telefoneId, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<String> exclusaoDeTelefone(
+            @Parameter(description = "ID do telefone a ser deletado", required = true, example = "1")
+            @PathVariable Long telefoneId,
+            @Parameter(description = "Token JWT no formato: Bearer {token}", required = true)
+            @RequestHeader("Authorization") String token) {
 
 
         usuarioService.deleteByTelefone(token, telefoneId);
