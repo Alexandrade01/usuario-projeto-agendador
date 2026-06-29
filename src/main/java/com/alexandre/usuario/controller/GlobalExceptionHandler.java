@@ -44,9 +44,17 @@ public class GlobalExceptionHandler {
         ));
     }
 
+    @ExceptionHandler(com.alexandre.usuario.infrastructure.exception.IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponseDTO> handleIllegalArgumentException(com.alexandre.usuario.infrastructure.exception.IllegalArgumentException ex, HttpServletRequest request){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(buildError(HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                request.getRequestURI(),
+                "Bad Request"
+        ));
+    }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponseDTO> handleIllegalArgumentException(IllegalArgumentException ex, HttpServletRequest request){
+    @ExceptionHandler(java.lang.IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponseDTO> handleIllegalArgumentException(java.lang.IllegalArgumentException ex, HttpServletRequest request){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(buildError(HttpStatus.BAD_REQUEST.value(),
                 ex.getMessage(),
                 request.getRequestURI(),
