@@ -2,11 +2,12 @@
 package com.alexandre.usuario.controller;
 
 import com.alexandre.usuario.business.UsuarioService;
+import com.alexandre.usuario.business.ViaCepService;
 import com.alexandre.usuario.business.dto.EnderecoDTO;
 import com.alexandre.usuario.business.dto.TelefoneDTO;
 import com.alexandre.usuario.business.dto.UsuarioDTO;
+import com.alexandre.usuario.infrastructure.clients.ViaCepDTO;
 import com.alexandre.usuario.infrastructure.exception.dto.ErrorResponseDTO;
-import com.alexandre.usuario.infrastructure.security.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -17,7 +18,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,8 +41,7 @@ import java.util.List;
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
-    private final AuthenticationManager authenticationManager;
-    private final JwtUtil jwtUtil;
+    private final ViaCepService viaCepService;
 
     /**     * Cadastra um novo usuário no sistema.     *     * @param usuarioDTO objeto contendo os dados do usuário a ser cadastrado     * @return ResponseEntity contendo o DTO do usuário cadastrado com status 200 OK     */
     @PostMapping
@@ -311,6 +310,13 @@ public class UsuarioController {
         usuarioService.deleteByTelefone(token, telefoneId);
 
         return ResponseEntity.ok("Telefone deletado !");
+    }
+
+    @GetMapping("/endereco/{cep}")
+    public ResponseEntity<ViaCepDTO> buscarDadosCEP(@PathVariable("cep") String cep) {
+
+        return ResponseEntity.ok(viaCepService.buscaCEP(cep));
+
     }
 
 }
