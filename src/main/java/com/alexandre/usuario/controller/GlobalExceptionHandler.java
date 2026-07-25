@@ -19,46 +19,34 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponseDTO> handleResourceNotFoundException(ResourceNotFoundException ex,
                                                                             HttpServletRequest request){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(buildError(HttpStatus.NOT_FOUND.value(),
-                ex.getMessage(),
-                request.getRequestURI(),
-                "Not Found"
-        ));
+        return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage(), request);
     }
 
     @ExceptionHandler(ConflictException.class)
     public ResponseEntity<ErrorResponseDTO> handleConflictException(ConflictException ex, HttpServletRequest request){
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(buildError(HttpStatus.CONFLICT.value(),
-                ex.getMessage(),
-                request.getRequestURI(),
-                "Conflict"
-        ));
+        return buildErrorResponse(HttpStatus.CONFLICT, ex.getMessage(), request);
     }
 
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<ErrorResponseDTO> handleUnauthorizedException(UnauthorizedException ex, HttpServletRequest request){
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(buildError(HttpStatus.UNAUTHORIZED.value(),
-                ex.getMessage(),
-                request.getRequestURI(),
-                "Unauthorized"
-        ));
+        return buildErrorResponse(HttpStatus.UNAUTHORIZED, ex.getMessage(), request);
     }
 
     @ExceptionHandler(com.alexandre.usuario.infrastructure.exception.IllegalArgumentException.class)
     public ResponseEntity<ErrorResponseDTO> handleIllegalArgumentException(com.alexandre.usuario.infrastructure.exception.IllegalArgumentException ex, HttpServletRequest request){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(buildError(HttpStatus.BAD_REQUEST.value(),
-                ex.getMessage(),
-                request.getRequestURI(),
-                "Bad Request"
-        ));
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
     }
 
     @ExceptionHandler(java.lang.IllegalArgumentException.class)
     public ResponseEntity<ErrorResponseDTO> handleIllegalArgumentException(java.lang.IllegalArgumentException ex, HttpServletRequest request){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(buildError(HttpStatus.BAD_REQUEST.value(),
-                ex.getMessage(),
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
+    }
+
+    private ResponseEntity<ErrorResponseDTO> buildErrorResponse(HttpStatus status, String mensagem, HttpServletRequest request) {
+        return ResponseEntity.status(status).body(buildError(status.value(),
+                mensagem,
                 request.getRequestURI(),
-                "Bad Request"
+                status.getReasonPhrase()
         ));
     }
 
